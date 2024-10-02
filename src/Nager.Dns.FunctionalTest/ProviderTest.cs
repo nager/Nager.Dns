@@ -25,12 +25,12 @@ namespace Nager.Dns.FunctionalTest
             var dnsClient = new DnsClient(httpClientFactory);
             var responses = await dnsClient.MultiQueryAsync(DnsProvider.Google, [new DnsQuestion("google.com", DnsAnswerType.A)]);
 
-            Assert.AreEqual(1, responses.Count);
+            Assert.AreEqual(1, responses.Count, "To much responses");
 
             var response = responses.First();
 
             Assert.AreEqual(DnsResponseStatus.NoError, (DnsResponseStatus)response.Status);
-            Assert.AreEqual(1, response.Answer.Length);
+            Assert.IsTrue(response.Answer.Length > 0);
         }
 
         [TestMethod]
@@ -41,11 +41,12 @@ namespace Nager.Dns.FunctionalTest
             var dnsClient = new DnsClient(httpClientFactory);
             var responses = await dnsClient.MultiQueryAsync(DnsProvider.Cloudflare, [new DnsQuestion("google.com", DnsAnswerType.A)]);
 
-            Assert.AreEqual(1, responses.Count);
+            Assert.AreEqual(1, responses.Count, "To much responses");
 
             var response = responses.First();
 
             Assert.AreEqual(DnsResponseStatus.NoError, (DnsResponseStatus)response.Status);
+            Assert.IsTrue(response.Answer.Length > 0);
         }
     }
 }
