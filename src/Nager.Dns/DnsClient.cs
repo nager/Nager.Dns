@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Nager.Dns.Models;
-using System.Collections.Immutable;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Net.Http.Json;
@@ -13,43 +12,75 @@ namespace Nager.Dns
     /// </summary>
     public class DnsClient
     {
-        private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<DnsClient> _logger;
 
         /// <summary>
         /// Dns Client over HTTPS
         /// </summary>
-        /// <param name="httpClient"></param>
+        /// <param name="httpClientFactory"></param>
         /// <param name="logger"></param>
         public DnsClient(
-            HttpClient httpClient,
+            IHttpClientFactory httpClientFactory,
             ILogger<DnsClient>? logger = default)
         {
-            this._httpClient = httpClient;
+            this._httpClientFactory = httpClientFactory;
             this._logger = logger ?? new NullLogger<DnsClient>();
         }
 
-        public async Task<IEnumerable<DnsResponse>> MultiQueryAsync(
+        public async Task<ReadOnlyCollection<DnsResponse>> MultiQueryAsync(
+            DnsProvider dnsProvider,
             IEnumerable<DnsQuestion> dnsQuestions,
-            int maxConcurrentRequests = 20)
+            int maxConcurrentRequests = 20,
+            CancellationToken cancellationToken = default)
         {
             var totalDnsQuestions = dnsQuestions.Count();
 
             var dnsResponses = new List<DnsResponse>();
 
-            for (int i = 0; i < totalDnsQuestions; i += maxConcurrentRequests)
+            for (var i = 0; i < totalDnsQuestions; i += maxConcurrentRequests)
             {
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
                 var dnsQuestionPackage = dnsQuestions.Skip(i).Take(maxConcurrentRequests);
 
-                dnsResponses.AddRange(await this.QueryDnsQuestions(dnsQuestionPackage));
+                dnsResponses.AddRange(await this.QueryDnsQuestions(dnsProvider, dnsQuestionPackage, cancellationToken));
             }
 
-            return dnsResponses;
+            return dnsResponses.AsReadOnly();
         }
 
-        private async Task<ReadOnlyCollection<DnsResponse>> QueryDnsQuestions(IEnumerable<DnsQuestion> dnsQuestions)
+        private HttpClient GetHttpClient(DnsProvider dnsProvider)
+        {
+            var httpClient = this._httpClientFactory.CreateClient();
+
+            switch (dnsProvider)
+            {
+                case DnsProvider.Google:
+                    httpClient.BaseAddress = new Uri("https://dns.google/resolve");
+                    break;
+                case DnsProvider.Cloudflare:
+                    httpClient.BaseAddress = new Uri("https://cloudflare-dns.com/dns-query");
+                    httpClient.DefaultRequestHeaders.Add("Accept", "application/dns-json");
+                    break;
+                default:
+                    break;
+            }
+
+            return httpClient;
+        }
+
+        private async Task<IEnumerable<DnsResponse>> QueryDnsQuestions(
+            DnsProvider dnsProvider,
+            IEnumerable<DnsQuestion> dnsQuestions,
+            CancellationToken cancellationToken = default)
         {
             var errors = 0;
+
+            var httpClient = this.GetHttpClient(dnsProvider);
 
             var stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -57,8 +88,13 @@ namespace Nager.Dns
             var httpQueryTasks = new List<Task<HttpResponseMessage?>>();
             foreach (var dnsQuestion in dnsQuestions)
             {
-                var requestUri = $"https://dns.google/resolve?name={dnsQuestion.Name}&type={dnsQuestion.Type}";
-                httpQueryTasks.Add(this._httpClient.GetAsync(requestUri).ContinueWith(completedTask =>
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    break;
+                }
+
+                var requestUri = $"?name={dnsQuestion.Name}&type={dnsQuestion.Type}";
+                httpQueryTasks.Add(httpClient.GetAsync(requestUri, cancellationToken).ContinueWith(completedTask =>
                 {
                     if (completedTask.IsFaulted)
                     {
@@ -93,18 +129,23 @@ namespace Nager.Dns
                     continue;
                 }
 
-                var jsonReadTask = httpResponseMessage.Content.ReadFromJsonAsync<DnsResponse>().ContinueWith((completedTask) =>
+                var jsonReadTask = httpResponseMessage.Content.ReadFromJsonAsync<DnsResponse>(cancellationToken).ContinueWith((completedTask) =>
                 {
-                    if (completedTask.IsFaulted)
+                    try
                     {
-                        return null;
+                        if (completedTask.IsFaulted)
+                        {
+                            return null;
+                        }
+                        else if (completedTask.IsCanceled)
+                        {
+                            return null;
+                        }
                     }
-                    else if (completedTask.IsCanceled)
+                    finally
                     {
-                        return null;
+                        httpResponseMessage.Dispose();
                     }
-
-                    httpResponseMessage.Dispose();
 
                     return completedTask.Result;
                 });
@@ -124,9 +165,7 @@ namespace Nager.Dns
 
             return jsonReadTasks
                 .Where(o => o.Result != null)
-                .Select(o => o.Result!)
-                .ToList()
-                .AsReadOnly();
+                .Select(o => o.Result!);
         }
     }
 }
