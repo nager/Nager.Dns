@@ -28,7 +28,15 @@ namespace Nager.Dns
             this._logger = logger ?? new NullLogger<DnsClient>();
         }
 
-        public async Task<ReadOnlyCollection<DnsResponse>> MultiQueryAsync(
+        /// <summary>
+        /// Bulk Dns Query
+        /// </summary>
+        /// <param name="dnsProvider"></param>
+        /// <param name="dnsQuestions"></param>
+        /// <param name="maxConcurrentRequests"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<ReadOnlyCollection<DnsResponse>> BulkDnsQueryAsync(
             DnsProvider dnsProvider,
             IEnumerable<DnsQuestion> dnsQuestions,
             int maxConcurrentRequests = 20,
@@ -51,6 +59,22 @@ namespace Nager.Dns
             }
 
             return dnsResponses.AsReadOnly();
+        }
+
+        /// <summary>
+        /// Dns Query
+        /// </summary>
+        /// <param name="dnsProvider"></param>
+        /// <param name="dnsQuestion"></param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        public async Task<DnsResponse> DnsQueryAsync(
+            DnsProvider dnsProvider,
+            DnsQuestion dnsQuestion,
+            CancellationToken cancellationToken = default)
+        {
+            var dnsResponses = await this.QueryDnsQuestions(dnsProvider, [dnsQuestion], cancellationToken);
+            return dnsResponses.Single();
         }
 
         private HttpClient GetHttpClient(DnsProvider dnsProvider)

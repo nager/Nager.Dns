@@ -23,7 +23,7 @@ namespace Nager.Dns.FunctionalTest
             var httpClientFactory = this.GetHttpClientFactory();
 
             var dnsClient = new DnsClient(httpClientFactory);
-            var responses = await dnsClient.MultiQueryAsync(DnsProvider.Google, [new DnsQuestion("google.com", DnsAnswerType.A)]);
+            var responses = await dnsClient.BulkDnsQueryAsync(DnsProvider.Google, [new DnsQuestion("google.com", DnsAnswerType.A)]);
 
             Assert.AreEqual(1, responses.Count, "To much responses");
 
@@ -39,7 +39,7 @@ namespace Nager.Dns.FunctionalTest
             var httpClientFactory = this.GetHttpClientFactory();
 
             var dnsClient = new DnsClient(httpClientFactory);
-            var responses = await dnsClient.MultiQueryAsync(DnsProvider.Cloudflare, [new DnsQuestion("google.com", DnsAnswerType.A)]);
+            var responses = await dnsClient.BulkDnsQueryAsync(DnsProvider.Cloudflare, [new DnsQuestion("google.com", DnsAnswerType.A)]);
 
             Assert.AreEqual(1, responses.Count, "To much responses");
 
