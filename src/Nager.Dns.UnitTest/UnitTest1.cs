@@ -6,6 +6,8 @@ namespace Nager.Dns.UnitTest
         [TestMethod]
         public async Task TestMethod1()
         {
+            //TODO:Add test logic
+            await Task.Delay(100);
         }
     }
 }
