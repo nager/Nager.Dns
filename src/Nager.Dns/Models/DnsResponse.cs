@@ -37,15 +37,24 @@
         public bool CD { get; set; }
 
         /// <summary>
-        /// Question
+        /// Dns Questions
         /// </summary>
-        public DnsQuestion[] Question { get; set; }
+        public DnsQuestion[] Question { get; set; } = [];
 
-        public DnsRecord[] Answer { get; set; }
+        /// <summary>
+        /// Answer Dns Records
+        /// </summary>
+        public DnsRecord[] Answer { get; set; } = [];
 
-        public DnsRecord[] Authority { get; set; }
+        /// <summary>
+        /// Authority Dns Records
+        /// </summary>
+        public DnsRecord[] Authority { get; set; } = [];
 
-        public DnsRecord[] Additional { get; set; }
+        /// <summary>
+        /// Additional Dns Records
+        /// </summary>
+        public DnsRecord[] Additional { get; set; } = [];
 
         //WARNING: the response sometimes changes
         //public string[] Comment { get; set; }

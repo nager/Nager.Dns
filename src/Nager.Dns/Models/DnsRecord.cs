@@ -8,7 +8,7 @@
         /// <summary>
         /// Name
         /// </summary>
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Type
@@ -23,6 +23,6 @@
         /// <summary>
         /// Data
         /// </summary>
-        public string Data { get; set; }
+        public string? Data { get; set; }
     }
 }
