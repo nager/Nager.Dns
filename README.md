@@ -3,7 +3,10 @@
 A simple C# DNS client that uses DoH to securely perform DNS queries over HTTPS.
 
 ```cs
-var dnsClient = new DnsClient(new HttpClient());
+var serviceProvider = new ServiceCollection().AddHttpClient().BuildServiceProvider();
+var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+
+var dnsClient = new DnsClient(httpClientFactory);
 var responses = await dnsClient.BulkDnsQueryAsync(DnsProvider.Google, [new DnsQuestion("google.com", DnsAnswerType.A)]);
 ```
 
