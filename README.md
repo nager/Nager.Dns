@@ -7,7 +7,15 @@ var serviceProvider = new ServiceCollection().AddHttpClient().BuildServiceProvid
 var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
 
 var dnsClient = new DnsClient(httpClientFactory);
-var responses = await dnsClient.BulkDnsQueryAsync(DnsProvider.Google, [new DnsQuestion("google.com", DnsAnswerType.A)]);
+var responses = await dnsClient.BulkDnsQueryAsync([new DnsQuestion("google.com", DnsAnswerType.A), new DnsQuestion("microsoft.com", DnsAnswerType.A)], DnsProvider.Google);
+```
+
+```cs
+var serviceProvider = new ServiceCollection().AddHttpClient().BuildServiceProvider();
+var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
+
+var dnsClient = new DnsClient(httpClientFactory);
+var responses = await dnsClient.DnsQueryAsync(new DnsQuestion("google.com", DnsAnswerType.A), DnsProvider.Google);
 ```
 
 ## nuget
