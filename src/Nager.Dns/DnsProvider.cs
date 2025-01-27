@@ -1,7 +1,7 @@
 ﻿namespace Nager.Dns
 {
     /// <summary>
-    /// Dns Provider
+    /// DNS over HTTPS - Dns Provider
     /// </summary>
     public enum DnsProvider
     {

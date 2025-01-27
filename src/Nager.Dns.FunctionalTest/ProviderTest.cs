@@ -17,29 +17,15 @@ namespace Nager.Dns.FunctionalTest
             return mockHttpClientFactory.Object;
         }
 
-        [TestMethod]
-        public async Task Google_Test()
+        [DataRow(DnsProvider.Google)]
+        [DataRow(DnsProvider.Cloudflare)]
+        [DataTestMethod]
+        public async Task Query_Google_Test(DnsProvider dnsProvider)
         {
             var httpClientFactory = this.GetHttpClientFactory();
 
             var dnsClient = new DnsClient(httpClientFactory);
-            var responses = await dnsClient.BulkDnsQueryAsync(DnsProvider.Google, [new DnsQuestion("google.com", DnsAnswerType.A)]);
-
-            Assert.AreEqual(1, responses.Count, "To much responses");
-
-            var response = responses.First();
-
-            Assert.AreEqual(DnsResponseStatus.NoError, (DnsResponseStatus)response.Status);
-            Assert.IsTrue(response.Answer.Length > 0);
-        }
-
-        [TestMethod]
-        public async Task Cloudflare_Test()
-        {
-            var httpClientFactory = this.GetHttpClientFactory();
-
-            var dnsClient = new DnsClient(httpClientFactory);
-            var responses = await dnsClient.BulkDnsQueryAsync(DnsProvider.Cloudflare, [new DnsQuestion("google.com", DnsAnswerType.A)]);
+            var responses = await dnsClient.BulkDnsQueryAsync([new DnsQuestion("google.com", DnsAnswerType.A)], dnsProvider);
 
             Assert.AreEqual(1, responses.Count, "To much responses");
 

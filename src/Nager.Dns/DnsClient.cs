@@ -16,10 +16,10 @@ namespace Nager.Dns
         private readonly ILogger<DnsClient> _logger;
 
         /// <summary>
-        /// Dns Client over HTTPS
+        /// Initializes a new instance of the <see cref="DnsClient"/> class.
         /// </summary>
-        /// <param name="httpClientFactory"></param>
-        /// <param name="logger"></param>
+        /// <param name="httpClientFactory">The factory to create HTTP clients.</param>
+        /// <param name="logger">The logger instance for diagnostic messages. Defaults to a no-op logger.</param>
         public DnsClient(
             IHttpClientFactory httpClientFactory,
             ILogger<DnsClient>? logger = default)
@@ -29,16 +29,16 @@ namespace Nager.Dns
         }
 
         /// <summary>
-        /// Bulk Dns Query
+        /// Performs a bulk DNS query for multiple questions, with optional concurrency control.
         /// </summary>
-        /// <param name="dnsProvider"></param>
-        /// <param name="dnsQuestions"></param>
-        /// <param name="maxConcurrentRequests"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="dnsQuestions">The list of DNS questions to resolve.</param>
+        /// <param name="dnsProvider">The DNS provider to use. Default to <see cref="DnsProvider.Google"/></param>
+        /// <param name="maxConcurrentRequests">The maximum number of concurrent requests. Defaults to 20.</param>
+        /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
         /// <returns></returns>
         public async Task<ReadOnlyCollection<DnsResponse>> BulkDnsQueryAsync(
-            DnsProvider dnsProvider,
             IEnumerable<DnsQuestion> dnsQuestions,
+            DnsProvider dnsProvider = DnsProvider.Google,
             int maxConcurrentRequests = 20,
             CancellationToken cancellationToken = default)
         {
@@ -62,15 +62,15 @@ namespace Nager.Dns
         }
 
         /// <summary>
-        /// Dns Query
+        /// Performs a DNS query for a single question.
         /// </summary>
-        /// <param name="dnsProvider"></param>
-        /// <param name="dnsQuestion"></param>
-        /// <param name="cancellationToken"></param>
+        /// <param name="dnsQuestion">The DNS question to resolve.</param>
+        /// <param name="dnsProvider">The DNS provider to use. Default to <see cref="DnsProvider.Google"/></param>
+        /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
         /// <returns></returns>
         public async Task<DnsResponse> DnsQueryAsync(
-            DnsProvider dnsProvider,
             DnsQuestion dnsQuestion,
+            DnsProvider dnsProvider = DnsProvider.Google,
             CancellationToken cancellationToken = default)
         {
             var dnsResponses = await this.QueryDnsQuestions(dnsProvider, [dnsQuestion], cancellationToken);
