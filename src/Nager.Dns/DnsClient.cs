@@ -156,7 +156,7 @@ namespace Nager.Dns
                 }));
             }
 
-            await Task.WhenAll(httpQueryTasks);
+            await Task.WhenAll(httpQueryTasks).ConfigureAwait(false);
 
             var jsonReadTasks = new List<Task<DnsResponse?>>();
             foreach (var queryTask in httpQueryTasks)
@@ -200,7 +200,7 @@ namespace Nager.Dns
                 jsonReadTasks.Add(jsonReadTask);
             }
 
-            await Task.WhenAll(jsonReadTasks);
+            await Task.WhenAll(jsonReadTasks).ConfigureAwait(false);
 
             stopwatch.Stop();
             errors += jsonReadTasks.Where(o => o.Result == null).Count();
