@@ -15,7 +15,7 @@ namespace Nager.Dns.Models
         /// <summary>
         /// Type
         /// </summary>
-        public DnsAnswerType Type { get; set; }
+        public DnsRecordType Type { get; set; }
 
         /// <summary>
         /// Dns Question
@@ -28,7 +28,7 @@ namespace Nager.Dns.Models
         /// <param name="name"></param>
         /// <param name="type"></param>
         [SetsRequiredMembers]
-        public DnsQuestion(string name, DnsAnswerType type)
+        public DnsQuestion(string name, DnsRecordType type)
         {
             this.Name = name;
             this.Type = type;

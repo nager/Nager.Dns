@@ -1,14 +1,35 @@
 ﻿namespace Nager.Dns.Models
 {
     /// <summary>
-    /// DnsResponse
+    /// Dns Response
     /// </summary>
     public class DnsResponse
     {
         /// <summary>
         /// Status
         /// </summary>
+        /// <remarks>DNS response code (32 bit integer)</remarks>
         public int Status { get; set; }
+
+        /// <summary>
+        /// DNS response code
+        /// </summary>
+        /// <remarks>
+        /// Parsed <see cref="DnsResponseCode"/> value from the raw <c>Status</c> field,
+        /// or <c>null</c> if the status code is not defined in the enum.
+        /// </remarks>
+        public DnsResponseCode? ResponseCode
+        {
+            get
+            {
+                if (Enum.IsDefined(typeof(DnsResponseCode), this.Status))
+                {
+                    return (DnsResponseCode)this.Status;
+                }
+
+                return null;
+            }
+        }
 
         /// <summary>
         /// Truncated bit was set

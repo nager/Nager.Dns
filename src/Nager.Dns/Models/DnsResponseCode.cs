@@ -1,9 +1,9 @@
 ﻿namespace Nager.Dns.Models
 {
     /// <summary>
-    /// Dns Response Status
+    /// Dns Response Code
     /// </summary>
-    public enum DnsResponseStatus
+    public enum DnsResponseCode
     {
         /// <summary>
         /// DNS Query completed successfully

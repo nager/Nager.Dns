@@ -1,4 +1,6 @@
-﻿namespace Nager.Dns.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Nager.Dns.Models
 {
     /// <summary>
     /// Dns Record
@@ -11,9 +13,31 @@
         public string? Name { get; set; }
 
         /// <summary>
+        /// Type Id
+        /// </summary>
+        [JsonPropertyName("Type")]
+        public int TypeId { get; set; }
+
+        /// <summary>
         /// Type
         /// </summary>
-        public int Type { get; set; }
+        /// <remarks>
+        /// Parsed <see cref="DnsRecordType"/> value from the raw <c>TypeId</c> field,
+        /// or <c>null</c> if the record type is not defined in the enum.
+        /// </remarks>
+        [JsonIgnore]
+        public DnsRecordType? Type
+        {
+            get
+            {
+                if (Enum.IsDefined(typeof(DnsRecordType), this.TypeId))
+                {
+                    return (DnsRecordType)this.TypeId;
+                }
+
+                return null;
+            }
+        }
 
         /// <summary>
         /// Time to live

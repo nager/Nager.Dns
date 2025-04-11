@@ -25,13 +25,13 @@ namespace Nager.Dns.FunctionalTest
             var httpClientFactory = this.GetHttpClientFactory();
 
             var dnsClient = new DnsClient(httpClientFactory);
-            var responses = await dnsClient.BulkDnsQueryAsync([new DnsQuestion("google.com", DnsAnswerType.A)], dnsProvider);
+            var responses = await dnsClient.BulkDnsQueryAsync([new DnsQuestion("google.com", DnsRecordType.A)], dnsProvider);
 
             Assert.AreEqual(1, responses.Count, "To much responses");
 
             var response = responses.First();
 
-            Assert.AreEqual(DnsResponseStatus.NoError, (DnsResponseStatus)response.Status);
+            Assert.AreEqual(DnsResponseCode.NoError, (DnsResponseCode)response.Status);
             Assert.IsTrue(response.Answer.Length > 0);
         }
     }
