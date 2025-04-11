@@ -13,8 +13,7 @@ namespace Nager.Dns
     /// </summary>
     public class DnsClient
     {
-        private readonly IHttpClientFactory? _httpClientFactory;
-        private readonly HttpClient? _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<DnsClient> _logger;
 
         /// <summary>
@@ -22,25 +21,11 @@ namespace Nager.Dns
         /// </summary>
         /// <param name="httpClientFactory">The factory to create HTTP clients.</param>
         /// <param name="logger">The logger instance for diagnostic messages. Defaults to a no-op logger.</param>
-        [ActivatorUtilitiesConstructor]
         public DnsClient(
             IHttpClientFactory httpClientFactory,
             ILogger<DnsClient>? logger = default)
         {
             this._httpClientFactory = httpClientFactory;
-            this._logger = logger ?? new NullLogger<DnsClient>();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DnsClient"/> class.
-        /// </summary>
-        /// <param name="httpClient">The <see cref="HttpClient"/> instance used to send DNS queries over HTTPS.</param>
-        /// <param name="logger">The logger instance for diagnostic messages. Defaults to a no-op logger.</param>
-        public DnsClient(
-            HttpClient httpClient,
-            ILogger<DnsClient>? logger = default)
-        {
-            this._httpClient = httpClient;
             this._logger = logger ?? new NullLogger<DnsClient>();
         }
 
@@ -95,16 +80,7 @@ namespace Nager.Dns
 
         private HttpClient GetHttpClient(DnsProvider dnsProvider)
         {
-            HttpClient httpClient;
-
-            if (this._httpClientFactory is not null)
-            {
-                httpClient = this._httpClientFactory.CreateClient();
-            }
-            else
-            {
-                httpClient = this._httpClient!;
-            }
+            var httpClient = this._httpClientFactory.CreateClient();
 
             switch (dnsProvider)
             {
