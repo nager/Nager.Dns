@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Nager.Dns.Models;
 using System.Collections.ObjectModel;
@@ -21,6 +22,7 @@ namespace Nager.Dns
         /// </summary>
         /// <param name="httpClientFactory">The factory to create HTTP clients.</param>
         /// <param name="logger">The logger instance for diagnostic messages. Defaults to a no-op logger.</param>
+        [ActivatorUtilitiesConstructor]
         public DnsClient(
             IHttpClientFactory httpClientFactory,
             ILogger<DnsClient>? logger = default)
