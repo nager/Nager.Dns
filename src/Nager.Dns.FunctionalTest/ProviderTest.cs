@@ -24,7 +24,7 @@ namespace Nager.Dns.FunctionalTest
         {
             var httpClientFactory = this.GetHttpClientFactory();
 
-            var dnsClient = new DnsClient(httpClientFactory);
+            IDnsClient dnsClient = new DnsClient(httpClientFactory);
             var responses = await dnsClient.BulkDnsQueryAsync([new DnsQuestion("google.com", DnsRecordType.A)], dnsProvider);
 
             Assert.AreEqual(1, responses.Count, "To much responses");

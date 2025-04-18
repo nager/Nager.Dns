@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Nager.Dns.Models;
 using System.Collections.ObjectModel;
@@ -11,7 +10,7 @@ namespace Nager.Dns
     /// <summary>
     /// Dns Client over HTTPS
     /// </summary>
-    public class DnsClient
+    public class DnsClient : IDnsClient
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<DnsClient> _logger;
@@ -29,14 +28,7 @@ namespace Nager.Dns
             this._logger = logger ?? new NullLogger<DnsClient>();
         }
 
-        /// <summary>
-        /// Performs a bulk DNS query for multiple questions, with optional concurrency control.
-        /// </summary>
-        /// <param name="dnsQuestions">The list of DNS questions to resolve.</param>
-        /// <param name="dnsProvider">The DNS provider to use. Default to <see cref="DnsProvider.Google"/></param>
-        /// <param name="maxConcurrentRequests">The maximum number of concurrent requests. Defaults to 20.</param>
-        /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<ReadOnlyCollection<DnsResponse>> BulkDnsQueryAsync(
             IEnumerable<DnsQuestion> dnsQuestions,
             DnsProvider dnsProvider = DnsProvider.Google,
@@ -62,13 +54,7 @@ namespace Nager.Dns
             return dnsResponses.AsReadOnly();
         }
 
-        /// <summary>
-        /// Performs a DNS query for a single question.
-        /// </summary>
-        /// <param name="dnsQuestion">The DNS question to resolve.</param>
-        /// <param name="dnsProvider">The DNS provider to use. Default to <see cref="DnsProvider.Google"/></param>
-        /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
-        /// <returns></returns>
+        /// <inheritdoc />
         public async Task<DnsResponse> DnsQueryAsync(
             DnsQuestion dnsQuestion,
             DnsProvider dnsProvider = DnsProvider.Google,

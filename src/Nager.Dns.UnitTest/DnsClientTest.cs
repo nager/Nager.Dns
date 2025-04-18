@@ -35,7 +35,7 @@ namespace Nager.Dns.UnitTest
             var mockFactory = new Mock<IHttpClientFactory>();
             mockFactory.Setup(f => f.CreateClient(It.IsAny<string>())).Returns(httpClient);
 
-            var client = new DnsClient(mockFactory.Object, mockLogger.Object);
+            IDnsClient client = new DnsClient(mockFactory.Object, mockLogger.Object);
 
             Assert.IsNotNull(client);
 
