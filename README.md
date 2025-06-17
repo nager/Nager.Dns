@@ -27,8 +27,8 @@ var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
 
 var dnsQuestions = new DnsQuestion[]
 {
-    new DnsQuestion("google.com", DnsAnswerType.A),
-    new DnsQuestion("microsoft.com", DnsAnswerType.A)
+    new DnsQuestion("google.com", DnsRecordType.A),
+    new DnsQuestion("microsoft.com", DnsRecordType.A)
 };
 
 var dnsClient = new DnsClient(httpClientFactory);
@@ -43,7 +43,7 @@ var serviceProvider = new ServiceCollection().AddHttpClient().BuildServiceProvid
 var httpClientFactory = serviceProvider.GetService<IHttpClientFactory>();
 
 var dnsClient = new DnsClient(httpClientFactory);
-var responses = await dnsClient.DnsQueryAsync(new DnsQuestion("google.com", DnsAnswerType.A), DnsProvider.Google);
+var responses = await dnsClient.DnsQueryAsync(new DnsQuestion("google.com", DnsRecordType.A), DnsProvider.Google);
 ```
 
 ## Supported DNS Providers
