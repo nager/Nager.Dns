@@ -1,24 +1,25 @@
 # Nager.Dns with DoH (DNS over HTTPS)
 
-Nager.Dns is a simple and powerful C# DNS client that securely performs DNS queries using DNS over HTTPS (DoH). It supports multiple DNS providers and offers an easy-to-use API.
+**Nager.Dns** is a lightweight and powerful C# DNS client that performs **secure DNS queries over HTTPS (DoH)**. It supports multiple DNS providers and provides an easy-to-use API for .NET applications.
 
-## Features
+## ⚡ Features
 - Secure DNS queries over HTTPS (DoH)
 - Bulk DNS query support
 - Multiple DNS providers included (e.g., Google, Cloudflare)
 - Lightweight and fast
 - Easily integrates with .NET applications
 
-## Installation
+## 📦 Installation
 
-The package is available on [nuget](https://www.nuget.org/packages/Nager.Dns)
-```
+The package is available on [NuGet](https://www.nuget.org/packages/Nager.Dns)
+
+```powershell
 PM> install-package Nager.Dns
 ```
 
-## Usage
+## 💻 Usage Examples
 
-### Bulk DNS Query Example
+### Bulk DNS Query
 Perform DNS queries for multiple domains at once:
 
 ```cs
@@ -35,7 +36,7 @@ var dnsClient = new DnsClient(httpClientFactory);
 var responses = await dnsClient.BulkDnsQueryAsync(dnsQuestions, DnsProvider.Google);
 ```
 
-### Single DNS Query Example
+### Single DNS Query
 Perform a DNS query for a single domain:
 
 ```cs
@@ -46,9 +47,9 @@ var dnsClient = new DnsClient(httpClientFactory);
 var responses = await dnsClient.DnsQueryAsync(new DnsQuestion("google.com", DnsRecordType.A), DnsProvider.Google);
 ```
 
-## Supported DNS Providers
+## 🌐 Supported DNS Providers
 - Google Public DNS
 - Cloudflare DNS
 
-## Feedback and Contributions
+## 📝 Feedback and Contributions
 We welcome feedback, feature requests, and contributions! Feel free to open an issue or submit a pull request.
