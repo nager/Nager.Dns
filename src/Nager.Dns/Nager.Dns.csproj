@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Authors>Tino Hager</Authors>
     <Company>nager.at</Company>
-    <Description>DNS client that uses DoH</Description>
+    <Description>Modern DNS client using DNS-over-HTTPS (DoH) for secure and efficient domain name resolution.</Description>
 
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -15,6 +15,7 @@
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/nager/Nager.Dns</PackageProjectUrl>
+    <PackageTags>DNS;DNS-over-HTTPS;DoH;DNSClient;DomainResolution</PackageTags>
 
     <RepositoryUrl>https://github.com/nager/Nager.Dns</RepositoryUrl>
 	  
