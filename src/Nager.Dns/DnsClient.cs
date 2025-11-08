@@ -55,13 +55,13 @@ namespace Nager.Dns
         }
 
         /// <inheritdoc />
-        public async Task<DnsResponse> DnsQueryAsync(
+        public async Task<DnsResponse?> DnsQueryAsync(
             DnsQuestion dnsQuestion,
             DnsProvider dnsProvider = DnsProvider.Google,
             CancellationToken cancellationToken = default)
         {
             var dnsResponses = await this.QueryDnsQuestions(dnsProvider, [dnsQuestion], cancellationToken);
-            return dnsResponses.Single();
+            return dnsResponses.SingleOrDefault();
         }
 
         private HttpClient GetHttpClient(DnsProvider dnsProvider)
@@ -96,7 +96,7 @@ namespace Nager.Dns
             var stopwatch = new Stopwatch();
             stopwatch.Start();
 
-            var httpQueryTasks = new List<Task<HttpResponseMessage?>>();
+            var httpQueryTasks = new List<Task<HttpResponseMessage?>>(dnsQuestions.Count());
             foreach (var dnsQuestion in dnsQuestions)
             {
                 if (cancellationToken.IsCancellationRequested)
@@ -127,7 +127,7 @@ namespace Nager.Dns
             {
                 var httpResponseMessage = queryTask.Result;
 
-                if (httpResponseMessage == null)
+                if (httpResponseMessage is null)
                 {
                     errors++;
                     continue;
@@ -167,7 +167,7 @@ namespace Nager.Dns
             await Task.WhenAll(jsonReadTasks).ConfigureAwait(false);
 
             stopwatch.Stop();
-            errors += jsonReadTasks.Where(o => o.Result == null).Count();
+            errors += jsonReadTasks.Where(o => o.Result is not null).Count();
 
             if (this._logger.IsEnabled(LogLevel.Debug))
             {
@@ -175,7 +175,7 @@ namespace Nager.Dns
             }
 
             return jsonReadTasks
-                .Where(o => o.Result != null)
+                .Where(o => o.Result is not null)
                 .Select(o => o.Result!);
         }
     }
