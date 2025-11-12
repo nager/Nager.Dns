@@ -1,4 +1,5 @@
 using Moq;
+using Nager.Dns.FunctionalTest.Helpers;
 using Nager.Dns.Models;
 
 namespace Nager.Dns.FunctionalTest
@@ -22,9 +23,10 @@ namespace Nager.Dns.FunctionalTest
         [DataTestMethod]
         public async Task Query_Google_Test(DnsProvider dnsProvider)
         {
+            var loggerMock = LoggerHelper.GetLogger<DnsClient>();
             var httpClientFactory = this.GetHttpClientFactory();
 
-            IDnsClient dnsClient = new DnsClient(httpClientFactory);
+            IDnsClient dnsClient = new DnsClient(httpClientFactory, loggerMock.Object);
             var responses = await dnsClient.BulkDnsQueryAsync([new DnsQuestion("google.com", DnsRecordType.A)], dnsProvider);
 
             Assert.AreEqual(1, responses.Count, "To much responses");
