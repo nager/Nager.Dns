@@ -13,6 +13,11 @@
         /// <summary>
         /// Cloudflare
         /// </summary>
-        Cloudflare
+        Cloudflare,
+
+        /// <summary>
+        /// Adguard
+        /// </summary>
+        Adguard
     }
 }

@@ -20,8 +20,9 @@ namespace Nager.Dns.FunctionalTest
 
         [DataRow(DnsProvider.Google)]
         [DataRow(DnsProvider.Cloudflare)]
+        [DataRow(DnsProvider.Adguard)]
         [DataTestMethod]
-        public async Task Query_Google_Test(DnsProvider dnsProvider)
+        public async Task Query_DnsProvider_Test(DnsProvider dnsProvider)
         {
             var loggerMock = LoggerHelper.GetLogger<DnsClient>();
             var httpClientFactory = this.GetHttpClientFactory();

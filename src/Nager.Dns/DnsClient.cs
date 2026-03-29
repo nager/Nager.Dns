@@ -67,6 +67,7 @@ namespace Nager.Dns
         private HttpClient GetHttpClient(DnsProvider dnsProvider)
         {
             var httpClient = this._httpClientFactory.CreateClient();
+            httpClient.DefaultRequestVersion = new Version(2, 0);
 
             switch (dnsProvider)
             {
@@ -76,6 +77,9 @@ namespace Nager.Dns
                 case DnsProvider.Cloudflare:
                     httpClient.BaseAddress = new Uri("https://cloudflare-dns.com/dns-query");
                     httpClient.DefaultRequestHeaders.Add("Accept", "application/dns-json");
+                    break;
+                case DnsProvider.Adguard:
+                    httpClient.BaseAddress = new Uri("https://dns.adguard.com/resolve");
                     break;
                 default:
                     break;

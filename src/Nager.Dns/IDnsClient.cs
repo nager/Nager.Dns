@@ -29,7 +29,7 @@ namespace Nager.Dns
         /// <param name="dnsProvider">The DNS provider to use. Default to <see cref="DnsProvider.Google"/></param>
         /// <param name="cancellationToken">The cancellation token to cancel the operation.</param>
         /// <returns></returns>
-        Task<DnsResponse> DnsQueryAsync(
+        Task<DnsResponse?> DnsQueryAsync(
             DnsQuestion dnsQuestion,
             DnsProvider dnsProvider = DnsProvider.Google,
             CancellationToken cancellationToken = default);
