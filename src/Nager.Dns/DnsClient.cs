@@ -171,7 +171,7 @@ namespace Nager.Dns
             await Task.WhenAll(jsonReadTasks).ConfigureAwait(false);
 
             stopwatch.Stop();
-            errors += jsonReadTasks.Where(o => o.Result is not null).Count();
+            errors += jsonReadTasks.Where(o => o.Result is null).Count();
 
             if (this._logger.IsEnabled(LogLevel.Debug))
             {

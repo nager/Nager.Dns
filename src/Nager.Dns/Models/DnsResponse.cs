@@ -79,5 +79,13 @@
 
         //WARNING: the response sometimes changes
         //public string[] Comment { get; set; }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            var question = this.Question.FirstOrDefault();
+
+            return $"{question?.Name} {question?.Type} [{this.Answer.Length}]";
+        }
     }
 }
