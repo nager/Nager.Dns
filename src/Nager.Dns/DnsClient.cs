@@ -175,7 +175,12 @@ namespace Nager.Dns
 
             if (this._logger.IsEnabled(LogLevel.Debug))
             {
-                this._logger.LogDebug($"{nameof(QueryDnsQuestions)} {(stopwatch.Elapsed.TotalMilliseconds / dnsQuestions.Count()):0.00}ms, errors:{errors}");
+                var count = dnsQuestions.Count();
+                var averageRequestDuration = count > 0
+                    ? stopwatch.Elapsed.TotalMilliseconds / count
+                    : 0;
+
+                this._logger.LogDebug($"{nameof(QueryDnsQuestions)} - avgDuration:{averageRequestDuration:0.00}ms, errors:{errors}");
             }
 
             return jsonReadTasks
