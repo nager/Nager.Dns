@@ -27,8 +27,10 @@ namespace Nager.Dns.FunctionalTest
             var loggerMock = LoggerHelper.GetLogger<DnsClient>();
             var httpClientFactory = this.GetHttpClientFactory();
 
+            var dnsQuestions = new DnsQuestion[] { new DnsQuestion("google.com", DnsRecordType.A) };
+
             IDnsClient dnsClient = new DnsClient(httpClientFactory, loggerMock.Object);
-            var responses = await dnsClient.BulkDnsQueryAsync([new DnsQuestion("google.com", DnsRecordType.A)], dnsProvider);
+            var responses = await dnsClient.BulkDnsQueryAsync(dnsQuestions, dnsProvider);
 
             Assert.AreEqual(1, responses.Count, "To much responses");
 
@@ -36,6 +38,7 @@ namespace Nager.Dns.FunctionalTest
 
             Assert.AreEqual(DnsResponseCode.NoError, (DnsResponseCode)response.Status);
             Assert.IsTrue(response.Answer.Length > 0);
+            Assert.AreEqual("google.com", response.Question[0].Name.TrimEnd('.'));
         }
     }
 }
