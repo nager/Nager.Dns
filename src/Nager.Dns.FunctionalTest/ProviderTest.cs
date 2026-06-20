@@ -1,6 +1,7 @@
 using Moq;
 using Nager.Dns.FunctionalTest.Helpers;
 using Nager.Dns.Models;
+using System.Net;
 
 namespace Nager.Dns.FunctionalTest
 {
@@ -21,7 +22,7 @@ namespace Nager.Dns.FunctionalTest
         [DataRow(DnsProvider.Google)]
         [DataRow(DnsProvider.Cloudflare)]
         [DataRow(DnsProvider.Adguard)]
-        [DataTestMethod]
+        [TestMethod]
         public async Task Query_DnsProvider_Test(DnsProvider dnsProvider)
         {
             var loggerMock = LoggerHelper.GetLogger<DnsClient>();
@@ -32,13 +33,19 @@ namespace Nager.Dns.FunctionalTest
             IDnsClient dnsClient = new DnsClient(httpClientFactory, loggerMock.Object);
             var responses = await dnsClient.BulkDnsQueryAsync(dnsQuestions, dnsProvider);
 
-            Assert.AreEqual(1, responses.Count, "To much responses");
+            Assert.HasCount(1, responses, "To much responses");
 
             var response = responses.First();
 
             Assert.AreEqual(DnsResponseCode.NoError, (DnsResponseCode)response.Status);
-            Assert.IsTrue(response.Answer.Length > 0);
+
             Assert.AreEqual("google.com", response.Question[0].Name.TrimEnd('.'));
+
+            Assert.IsGreaterThan(0, response.Answer.Length);
+            Assert.IsNotNull(response.Answer[0].Name);
+            Assert.AreEqual("google.com", response.Answer[0].Name.TrimEnd('.'));
+            Assert.IsNotNull(response.Answer[0].Data);
+            Assert.IsTrue(IPAddress.TryParse(response.Answer[0].Data, out _));
         }
     }
 }

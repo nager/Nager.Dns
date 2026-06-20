@@ -10,12 +10,13 @@ namespace Nager.Dns.Models
         /// <summary>
         /// Name
         /// </summary>
+        [JsonPropertyName("name")]
         public string? Name { get; set; }
 
         /// <summary>
         /// Type Id
         /// </summary>
-        [JsonPropertyName("Type")]
+        [JsonPropertyName("type")]
         public int TypeId { get; set; }
 
         /// <summary>
@@ -42,11 +43,13 @@ namespace Nager.Dns.Models
         /// <summary>
         /// Time to live
         /// </summary>
+        [JsonPropertyName("TTL")]
         public int TTL { get; set; }
 
         /// <summary>
         /// Data
         /// </summary>
+        [JsonPropertyName("data")]
         public string? Data { get; set; }
     }
 }

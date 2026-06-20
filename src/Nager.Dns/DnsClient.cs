@@ -144,7 +144,7 @@ namespace Nager.Dns
                     continue;
                 }
 
-                var jsonReadTask = httpResponseMessage.Content.ReadFromJsonAsync<DnsResponse>(cancellationToken).ContinueWith((completedTask) =>
+                var jsonReadTask = httpResponseMessage.Content.ReadFromJsonAsync(DnsResponseJsonContext.Default.DnsResponse, cancellationToken).ContinueWith((completedTask) =>
                 {
                     try
                     {
@@ -171,7 +171,7 @@ namespace Nager.Dns
             await Task.WhenAll(jsonReadTasks).ConfigureAwait(false);
 
             stopwatch.Stop();
-            errors += jsonReadTasks.Where(o => o.Result is null).Count();
+            errors += jsonReadTasks.Count(o => o.Result is null);
 
             if (this._logger.IsEnabled(LogLevel.Debug))
             {

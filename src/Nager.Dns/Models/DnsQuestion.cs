@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace Nager.Dns.Models
 {
@@ -10,11 +11,13 @@ namespace Nager.Dns.Models
         /// <summary>
         /// Name
         /// </summary>
+        [JsonPropertyName("name")]
         public required string Name { get; set; }
 
         /// <summary>
         /// Type
         /// </summary>
+        [JsonPropertyName("type")]
         public DnsRecordType Type { get; set; }
 
         /// <summary>
