@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Nager.Dns.FunctionalTest/Nager.Dns.FunctionalTest.csproj" />
+  <Project Path="Nager.Dns.UnitTest/Nager.Dns.UnitTest.csproj" />
+  <Project Path="Nager.Dns/Nager.Dns.csproj" />
+</Solution>
